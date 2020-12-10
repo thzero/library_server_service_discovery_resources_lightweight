@@ -19,6 +19,12 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 		this._serviceCommunicationRest = this._injector.getService(LibraryConstants.InjectorKeys.SERVICE_COMMUNICATION_REST);
 	}
 
+	async init(injector) {
+		await super.init(injector);
+
+		this._serviceCommunicationRest = this._injector.getService(LibraryConstants.InjectorKeys.SERVICE_COMMUNICATION_REST);
+	}
+
 	async cleanup() {
 		if (!this._consul)
 			return;
