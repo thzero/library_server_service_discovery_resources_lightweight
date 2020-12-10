@@ -1,7 +1,8 @@
 import { Mutex as asyncMutex } from 'async-mutex';
 
 import Constants from './constants';
-import LibraryConstants from '@thzero/library_common/constants';
+
+import NotImplementedError from '@thzero/library_common/errors/notImplemented';
 
 import ResourceDiscoveryService from '@thzero/library_server/service/discovery/resources';
 
@@ -11,18 +12,9 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 
 		this._mutex = new asyncMutex();
 
-		this._address = null;
 		this._name = null;
 
 		this._services = new Map();
-
-		this._serviceCommunicationRest = this._injector.getService(LibraryConstants.InjectorKeys.SERVICE_COMMUNICATION_REST);
-	}
-
-	async init(injector) {
-		await super.init(injector);
-
-		this._serviceCommunicationRest = this._injector.getService(LibraryConstants.InjectorKeys.SERVICE_COMMUNICATION_REST);
 	}
 
 	async cleanup() {
@@ -31,7 +23,7 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 		if (String.isNullOrEmpty(this._name))
 			return;
 
-		const response = await this._serviceCommunicationRest.post(correlationId, Constants.ExternalKeys.REGISTRY, 'degregister', {
+		const response = await this._serviceCommunicationRest.post(correlationId, Constants.ExternalKeys.REGISTRY, 'registry/degregister', {
 				name: this._name
 			},
 			{
@@ -53,7 +45,7 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 				if (service)
 					return this._successResponse(service, correlationId);
 
-				const response = await this._serviceCommunicationRest.get(correlationId, Constants.ExternalKeys.REGISTRY, '', name,
+				const response = await this._serviceCommunicationRest.get(correlationId, Constants.ExternalKeys.REGISTRY, 'registry', name,
 					{
 						correlationId: correlationId
 					});
@@ -69,44 +61,48 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 		}
 	}
 
+	async _initialize(correlationId, opts) {
+	}
+
 	async _register(correlationId, opts) {
 		const packagePath = `${process.cwd()}/package.json`;
 		const packageJson = require(packagePath);
 
 		this._name = packageJson.name;
-		this._address = opts.address;
 
-		const response = await this._serviceCommunicationRest.post(correlationId, Constants.ExternalKeys.REGISTRY, 'register', {
-				name: this._name,
-				address: this._address,
-				port: opts.port
-			},
+		const config = {
+			name: this._name,
+			address: opts.address,
+			port: opts.port,
+			healthCheck: opts.healthCheck,
+			secure: opts.secure
+		};
+
+		if (!String.isNullOrEmpty(opts.name))
+			config.name = opts.name;
+		if (!String.isNullOrEmpty(opts.ttl))
+			config.ttl = opts.ttl;
+		if (!String.isNullOrEmpty(opts.description))
+			config.notes = opts.description;
+		if (opts.grpc) {
+			config.grpc = {
+				port: opts.grpc.port,
+				secure: opts.grpc.secure
+			}
+		}
+
+		const response = await this._serviceCommunicationRest.post(correlationId, Constants.ExternalKeys.REGISTRY, 'registry/register',
+			config,
 			{
 				correlationId: correlationId
 			});
 		this._logger.debug('LightweightResourceDiscoveryService', '_register', 'response', response, correlationId);
+
 		return this._success(correlationId);
+	}
 
-		// const config = {
-		// 	id: LibraryUtility.generateId(),
-		// 	name: packageJson.name + '_instance',
-		// 	ttl: '10s',
-		// 	address: this._address,
-		// 	port: opts.port
-		// };
-		// if (!String.isNullOrEmpty(opts.name))
-		// 	config.name = opts.name;
-		// if (!String.isNullOrEmpty(opts.ttl))
-		// 	config.ttl = opts.ttl;
-		// if (!String.isNullOrEmpty(opts.description))
-		// 	config.notes = opts.description;
-		// if (opts.grpc && opts.grpc.port) {
-		// 	config.grpc = `${opts.address}:${opts.grpc.port}`;
-		// 	if (options.grpc.tls)
-		// 		config.grpcusetls = options.grpc.tls;
-		// }
-
-		// await this._consul.agent.service.register(config);
+	_serviceCommunicationRest() {
+		throw new NotImplementedError();
 	}
 }
 
