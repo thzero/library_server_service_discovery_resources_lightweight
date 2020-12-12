@@ -12,6 +12,10 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 
 		this._mutex = new asyncMutex();
 
+		this._communicationType = null;
+		this._communicationTypeGrpc = 'grpc';
+		this._communicationTypeHttp = 'http';
+
 		this._name = null;
 
 		this._services = new Map();
@@ -23,14 +27,28 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 		if (String.isNullOrEmpty(this._name))
 			return;
 
-		const response = await this._serviceCommunicationRest.post(correlationId, Constants.ExternalKeys.REGISTRY, 'registry/degregister', {
+		let response = null;
+		if (this.communicationType === this._communicationTypeHttp) {
+			response = await this._serviceCommunicationRest.post(correlationId, Constants.ExternalKeys.REGISTRY, 'registry/degregister', {
 				name: this._name
 			},
 			{
 				correlationId: correlationId
 			});
+		}
+		else if (this.communicationType === this._communicationTypeGrpc) {
+		}
+
 		this._logger.debug('LightweightResourceDiscoveryService', 'cleanup', 'response', response, correlationId);
 		return response;
+	}
+
+	get communicationType() {
+		if (this._communicationType)
+			return this._communicationType;
+
+		this._communicationType = this._config.get(`resource.type`, this._communicationTypeHttp);
+		return this._communicationType;
 	}
 
 	async _getService(correlationId, name) {
@@ -45,12 +63,18 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 				if (service)
 					return this._successResponse(service, correlationId);
 
-				const response = await this._serviceCommunicationRest.get(correlationId, Constants.ExternalKeys.REGISTRY, 'registry', name,
-					{
-						correlationId: correlationId
-					});
-				this._logger.debug('LightweightResourceDiscoveryService', '_getService', 'response', response, correlationId);
-				return response;
+
+				let response = null;
+				if (this.communicationType === this._communicationTypeHttp) {
+					response = await this._serviceCommunicationRest.get(correlationId, Constants.ExternalKeys.REGISTRY, 'registry', name,
+							{
+								correlationId: correlationId
+							});
+						this._logger.debug('LightweightResourceDiscoveryService', '_getService', 'response', response, correlationId);
+						return response;
+				}
+				else if (this.communicationType === this._communicationTypeGrpc) {
+				}
 			}
 			finally {
 				release();
@@ -91,11 +115,17 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 			}
 		}
 
-		const response = await this._serviceCommunicationRest.post(correlationId, Constants.ExternalKeys.REGISTRY, 'registry/register',
+		let response = null;
+		if (this.communicationType === this._communicationTypeHttp) {
+			response = await this._serviceCommunicationRest.post(correlationId, Constants.ExternalKeys.REGISTRY, 'registry/register',
 			config,
 			{
 				correlationId: correlationId
 			});
+		}
+		else if (this.communicationType === this._communicationTypeGrpc) {
+		}
+
 		this._logger.debug('LightweightResourceDiscoveryService', '_register', 'response', response, correlationId);
 
 		return this._success(correlationId);
