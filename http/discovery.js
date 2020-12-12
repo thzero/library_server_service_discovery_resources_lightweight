@@ -1,10 +1,19 @@
-import Constants from './constants';
+import Constants from '../constants';
+import LibraryConstants from '@thzero/library_server/constants';
 
 import DiscoveryService from '@thzero/library_server/service/discovery';
 
 class HttpLightweightResourceDiscoveryService extends DiscoveryService {
 	constructor() {
 		super();
+
+		this._serviceCommunicationRest = null;
+	}
+
+	async init(injector) {
+		await super.init(injector);
+
+		this._serviceCommunicationRest = this._injector.getService(LibraryConstants.InjectorKeys.SERVICE_COMMUNICATION_REST);
 	}
 
 	async cleanup(correlationId) {

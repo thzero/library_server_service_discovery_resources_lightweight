@@ -1,29 +1,24 @@
+import { Mutex as asyncMutex } from 'async-mutex';
+
 import LibraryUtility from '@thzero/library_common/utility';
 
 import BaseClientGrpcService from '@thzero/library_server_service_grpc/client';
-
-var registerMessages = require('../proto_register/binary/registry_pb');
-var registerService = require('../proto_register/binary/registry_grpc_pb');
 
 class LightweightResourceDiscoveryGrpcService extends BaseClientGrpcService {
 	constructor() {
 		super();
 
+		this._mutex = new asyncMutex();
+
 		this._client = null;
-	}
-
-	async initPost() {
-		const url = await this._host(LibraryUtility.generateId(), 'auth_grpc');
-		if (String.isNullOrEmpty(url))
-            throw Error(`Invalid url for 'auth_grpc'.`);
-
-		this._client = new registerService.RegisterClient(url, this._credentials);
 	}
 
 	async deregister(correlationId, token) {
 		try {
+			this._initClient(correlationId);
+
 			this._enforceNotNull('LightweightResourceDiscoveryGrpcService', 'deregister', token, 'token');
-			const request = new registerMessages.VerifyTokenRequest();
+			const request = new this._registerMessages.VerifyTokenRequest();
 			request.setCorrelationid(correlationId);
 			request.setToken(token);
 
@@ -39,8 +34,10 @@ class LightweightResourceDiscoveryGrpcService extends BaseClientGrpcService {
 
 	async get(correlationId, token) {
 		try {
+			this._initClient(correlationId);
+
 			this._enforceNotNull('LightweightResourceDiscoveryGrpcService', 'get', token, 'token');
-			const request = new registerMessages.VerifyTokenRequest();
+			const request = new this._registerMessages.VerifyTokenRequest();
 			request.setCorrelationid(correlationId);
 			request.setToken(token);
 
@@ -59,8 +56,10 @@ class LightweightResourceDiscoveryGrpcService extends BaseClientGrpcService {
 
 	async register(correlationId, token) {
 		try {
+			this._initClient(correlationId);
+
 			this._enforceNotNull('LightweightResourceDiscoveryGrpcService', 'register', token, 'token');
-			const request = new registerMessages.VerifyTokenRequest();
+			const request = new this._registerMessages.VerifyTokenRequest();
 			request.setCorrelationid(correlationId);
 			request.setToken(token);
 
@@ -72,6 +71,34 @@ class LightweightResourceDiscoveryGrpcService extends BaseClientGrpcService {
 		catch(err) {
 			return this._error('LightweightResourceDiscoveryGrpcService', 'register', null, err, null, null, correlationId);
 		}
+	}
+
+	async _initClient(correlationId) {
+		if (!this._client)
+			return;
+
+		const release = await this._mutex.acquire();
+		try {
+			if (!this._client)
+				return;
+
+			const url = await this._host(LibraryUtility.generateId(), 'registry_grpc');
+			if (String.isNullOrEmpty(url))
+				throw Error(`Invalid url for 'registry_grpc'.`);
+
+			this._client = new this._registerService.RegisterClient(url, this._credentials);
+		}
+		finally {
+			release();
+		}
+	}
+
+	get _registerMessages() {
+		throw new NotImplementedError();
+	}
+
+	get _registerService() {
+		throw new NotImplementedError();
 	}
 }
 

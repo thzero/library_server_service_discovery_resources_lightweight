@@ -1,5 +1,3 @@
-import Constants from './constants';
-
 import DiscoveryService from '@thzero/library_server/service/discovery';
 
 class GrpcLightweightResourceDiscoveryService extends DiscoveryService {
