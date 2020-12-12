@@ -1,3 +1,0 @@
-[submodule "proto_registry"]
-	path = proto_registry
-	url = https://github.com/thzero/library_server_proto_registry.git
