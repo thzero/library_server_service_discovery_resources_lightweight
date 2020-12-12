@@ -47,7 +47,7 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 		if (this._communicationType)
 			return this._communicationType;
 
-		this._communicationType = this._config.get(`resource.type`, this._communicationTypeHttp);
+		this._communicationType = this._config.get(`rdiscovery.resources.type`, this._communicationTypeHttp);
 		return this._communicationType;
 	}
 
