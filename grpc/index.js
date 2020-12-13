@@ -4,6 +4,9 @@ import LibraryUtility from '@thzero/library_common/utility';
 
 import BaseClientGrpcService from '@thzero/library_server_service_grpc/client';
 
+import registryMessages from '@thzero/library_server_service_discovery_resources_lightweight_proto/binary/registry_pb';
+import registryServices from '@thzero/library_server_service_discovery_resources_lightweight_proto/binary/registry_grpc_pb';
+
 class LightweightResourceDiscoveryGrpcService extends BaseClientGrpcService {
 	constructor() {
 		super();
@@ -18,7 +21,7 @@ class LightweightResourceDiscoveryGrpcService extends BaseClientGrpcService {
 			this._initClient(correlationId);
 
 			this._enforceNotNull('LightweightResourceDiscoveryGrpcService', 'deregister', token, 'token');
-			const request = new this._registerMessages.VerifyTokenRequest();
+			const request = new registryMessages.VerifyTokenRequest();
 			request.setCorrelationid(correlationId);
 			request.setToken(token);
 
@@ -37,7 +40,7 @@ class LightweightResourceDiscoveryGrpcService extends BaseClientGrpcService {
 			this._initClient(correlationId);
 
 			this._enforceNotNull('LightweightResourceDiscoveryGrpcService', 'get', token, 'token');
-			const request = new this._registerMessages.VerifyTokenRequest();
+			const request = new registryMessages.VerifyTokenRequest();
 			request.setCorrelationid(correlationId);
 			request.setToken(token);
 
@@ -59,7 +62,7 @@ class LightweightResourceDiscoveryGrpcService extends BaseClientGrpcService {
 			this._initClient(correlationId);
 
 			this._enforceNotNull('LightweightResourceDiscoveryGrpcService', 'register', token, 'token');
-			const request = new this._registerMessages.VerifyTokenRequest();
+			const request = new registryMessages.VerifyTokenRequest();
 			request.setCorrelationid(correlationId);
 			request.setToken(token);
 
@@ -86,19 +89,11 @@ class LightweightResourceDiscoveryGrpcService extends BaseClientGrpcService {
 			if (String.isNullOrEmpty(url))
 				throw Error(`Invalid url for 'registry_grpc'.`);
 
-			this._client = new this._registerService.RegisterClient(url, this._credentials);
+			this._client = new registryServices.RegisterClient(url, this._credentials);
 		}
 		finally {
 			release();
 		}
-	}
-
-	get _registerMessages() {
-		throw new NotImplementedError();
-	}
-
-	get _registerService() {
-		throw new NotImplementedError();
 	}
 }
 

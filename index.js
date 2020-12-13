@@ -1,7 +1,5 @@
 import { Mutex as asyncMutex } from 'async-mutex';
 
-import Constants from './constants';
-
 import NotImplementedError from '@thzero/library_common/errors/notImplemented';
 
 import ResourceDiscoveryService from '@thzero/library_server/service/discovery/resources';
@@ -34,15 +32,6 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 		service = new HttpLightweightResourceDiscoveryService();
 		service.init(injector);
 		this._communicationTypes.set(this._communicationTypeHttp, service);
-
-		// this._communicationTypes.set(`${this._communicationTypeGrpc}-cleanup`, this._cleanupGrpc);
-		// this._communicationTypes.set(`${this._communicationTypeHttp}-cleanup`, this._cleanupHttp);
-
-		// this._communicationTypes.set(`${this._communicationTypeGrpc}-get`, this._getGrpc);
-		// this._communicationTypes.set(`${this._communicationTypeHttp}-get`, this._getHttp);
-
-		// this._communicationTypes.set(`${this._communicationTypeGrpc}-register`, this._registerGrpc);
-		// this._communicationTypes.set(`${this._communicationTypeHttp}-register`, this._registerHttp);
 	}
 
 	async cleanup(correlationId) {
@@ -51,19 +40,6 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 		if (String.isNullOrEmpty(this._name))
 			return;
 
-		// let response = null;
-		// if (this.communicationType === this._communicationTypeHttp) {
-		// 	response = await this._serviceCommunicationRest.post(correlationId, Constants.ExternalKeys.REGISTRY, 'registry/degregister', {
-		// 		name: this._name
-		// 	},
-		// 	{
-		// 		correlationId: correlationId
-		// 	});
-		// }
-		// else if (this.communicationType === this._communicationTypeGrpc) {
-		// }
-
-		//const service = this._communicationTypes.get(`${this._communicationType}-cleanup`);
 		const communicationTypeService = this._communicationTypes.get(this._communicationType);
 		if (!communicationTypeService)
 			return this._error('LightweightResourceDiscoveryService', 'cleanup', 'response', `Invalid communication type service '${type}'.`, null, null, correlationId)
@@ -72,25 +48,6 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 		this._logger.debug('LightweightResourceDiscoveryService', 'cleanup', 'response', response, correlationId);
 		return response;
 	}
-
-	// async _cleanupGrpc(correlationId) {
-	// 	const response = this._success(correlationId);
-
-	// 	this._logger.debug('LightweightResourceDiscoveryService', '_cleanupGrpc', 'response', response, correlationId);
-	// 	return response;
-	// }
-
-	// async _cleanupHttp(correlationId) {
-	// 	const response = await this._serviceCommunicationRest.post(correlationId, Constants.ExternalKeys.REGISTRY, 'registry/degregister', {
-	// 		name: this._name
-	// 	},
-	// 	{
-	// 		correlationId: correlationId
-	// 	});
-
-	// 	this._logger.debug('LightweightResourceDiscoveryService', '_cleanupHttp', 'response', response, correlationId);
-	// 	return response;
-	// }
 
 	async _getService(correlationId, name) {
 		try {
@@ -104,19 +61,6 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 				if (service)
 					return this._successResponse(service, correlationId);
 
-				// let response = null;
-				// if (this.communicationType === this._communicationTypeHttp) {
-				// 	response = await this._serviceCommunicationRest.get(correlationId, Constants.ExternalKeys.REGISTRY, 'registry', name,
-				// 			{
-				// 				correlationId: correlationId
-				// 			});
-				//
-				// }
-				// else if (this.communicationType === this._communicationTypeGrpc) {
-				// }
-				//
-
-				//const service = this._communicationTypes.get(`${this._communicationType}-get`);
 				const communicationTypeService = this._communicationTypes.get(this._communicationType);
 				if (!communicationTypeService)
 					return this._error('LightweightResourceDiscoveryService', '_getService', 'response', `Invalid communication type service '${type}'.`, null, null, correlationId)
@@ -133,23 +77,6 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 			return this._error('LightweightResourceDiscoveryService', '_get', null, err, null, null, correlationId);
 		}
 	}
-
-	// async _getGrpc(correlationId, name) {
-	// 	const response = this._success(correlationId);
-
-	// 	this._logger.debug('LightweightResourceDiscoveryService', '_getGrpc', 'response', response, correlationId);
-	// 	return response;
-	// }
-
-	// async _getHttp(correlationId, name) {
-	// 	const response = await this._serviceCommunicationRest.get(correlationId, Constants.ExternalKeys.REGISTRY, 'registry', name,
-	// 		{
-	// 			correlationId: correlationId
-	// 		});
-
-	// 	this._logger.debug('LightweightResourceDiscoveryService', '_getHttp', 'response', response, correlationId);
-	// 	return response;
-	// }
 
 	async _initialize(correlationId, opts) {
 	}
@@ -182,19 +109,6 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 			}
 		}
 
-		// let response = null;
-		// if (this.communicationType === this._communicationTypeHttp) {
-		// 	response = await this._serviceCommunicationRest.post(correlationId, Constants.ExternalKeys.REGISTRY, 'registry/register',
-		// 	config,
-		// 	{
-		// 		correlationId: correlationId
-		// 	});
-		// }
-		// else if (this.communicationType === this._communicationTypeGrpc) {
-		// }
-
-
-		//const service = this._communicationTypes.get(`${this._communicationType}-register`);
 		const communicationTypeService = this._communicationTypes.get(this._communicationType);
 		if (!communicationTypeService)
 			return this._error('LightweightResourceDiscoveryService', '_getService', 'response', `Invalid communication type service '${type}'.`, null, null, correlationId)
@@ -204,24 +118,6 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 
 		return this._success(correlationId);
 	}
-
-	// async _registerGrpc(correlationId, config) {
-	// 	const response = this._success(correlationId);
-
-	// 	this._logger.debug('LightweightResourceDiscoveryService', '_registerGrpc', 'response', response, correlationId);
-	// 	return response;
-	// }
-
-	// async _registerHttp(correlationId, config) {
-	// 	const response = await this._serviceCommunicationRest.post(correlationId, Constants.ExternalKeys.REGISTRY, 'registry/register',
-	// 		config,
-	// 		{
-	// 			correlationId: correlationId
-	// 		});
-
-	// 	this._logger.debug('LightweightResourceDiscoveryService', '_registerHttp', 'response', response, correlationId);
-	// 	return response;
-	// }
 
 	_serviceCommunicationRest() {
 		throw new NotImplementedError();
