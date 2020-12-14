@@ -86,8 +86,11 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 		const packageJson = require(packagePath);
 
 		this._name = packageJson.name;
+		const config = this._config.get('discovery.resources', null);
+		if (config && !String.isNullOrEmpty(config.name))
+			this._name = config.name;
 
-		const config = {
+		const registerConfig = {
 			name: this._name,
 			address: opts.address,
 			port: opts.port,
@@ -97,13 +100,13 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 		};
 
 		if (!String.isNullOrEmpty(opts.name))
-			config.name = opts.name;
+			registerConfig.name = opts.name;
 		if (!String.isNullOrEmpty(opts.ttl))
-			config.ttl = opts.ttl;
+			egisterConfig.ttl = opts.ttl;
 		if (!String.isNullOrEmpty(opts.description))
-			config.notes = opts.description;
+			registerConfig.notes = opts.description;
 		if (opts.grpc) {
-			config.grpc = {
+			registerConfig.grpc = {
 				port: opts.grpc.port,
 				secure: opts.grpc.secure
 			}
@@ -113,7 +116,7 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 		if (!communicationTypeService)
 			return this._error('LightweightResourceDiscoveryService', '_getService', 'response', `Invalid communication type service '${type}'.`, null, null, correlationId)
 
-		const response = await communicationTypeService.register(correlationId, config);
+		const response = await communicationTypeService.register(correlationId, registerConfig);
 		this._logger.debug('LightweightResourceDiscoveryService', '_register', 'response', response, correlationId);
 
 		return this._success(correlationId);
