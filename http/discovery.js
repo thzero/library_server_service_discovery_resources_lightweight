@@ -29,7 +29,7 @@ class HttpLightweightResourceDiscoveryService extends DiscoveryService {
 	}
 
 	async getService(correlationId, name) {
-		const response = await this._serviceCommunicationRest.get(correlationId, Constants.ExternalKeys.REGISTRY, 'registry', name,
+		const response = await this._serviceCommunicationRest.getById(correlationId, Constants.ExternalKeys.REGISTRY, 'registry', name,
 			{
 				correlationId: correlationId
 			});
