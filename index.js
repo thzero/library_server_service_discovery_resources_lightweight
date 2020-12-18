@@ -34,18 +34,16 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 		this._communicationTypes.set(this._communicationTypeHttp, service);
 	}
 
-	async cleanup(correlationId) {
-		if (!this._consul)
-			return;
+	async _cleanup(correlationId) {
 		if (String.isNullOrEmpty(this._name))
 			return;
 
 		const communicationTypeService = this._communicationTypes.get(this._communicationType);
 		if (!communicationTypeService)
-			return this._error('LightweightResourceDiscoveryService', 'cleanup', 'response', `Invalid communication type service '${type}'.`, null, null, correlationId)
+			return this._error('LightweightResourceDiscoveryService', '_cleanup', 'response', `Invalid communication type service '${type}'.`, null, null, correlationId)
 
 		const response = await communicationTypeService.cleanup(correlationId);
-		this._logger.debug('LightweightResourceDiscoveryService', 'cleanup', 'response', response, correlationId);
+		this._logger.debug('LightweightResourceDiscoveryService', '_cleanup', 'response', response, correlationId);
 		return response;
 	}
 
