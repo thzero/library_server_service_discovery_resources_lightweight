@@ -17,6 +17,18 @@ class HttpLightweightResourceDiscoveryService extends DiscoveryService {
 	}
 
 	async cleanup(correlationId) {
+		const response = await this._serviceCommunicationRest.post(correlationId, Constants.ExternalKeys.REGISTRY, 'registry/cleanup', {
+			name: this._name
+		},
+		{
+			correlationId: correlationId
+		});
+
+		this._logger.debug('HttpLightweightResourceDiscoveryService', 'cleanup', 'response', response, correlationId);
+		return response;
+	}
+
+	async deregister(correlationId, name) {
 		const response = await this._serviceCommunicationRest.post(correlationId, Constants.ExternalKeys.REGISTRY, 'registry/degregister', {
 			name: this._name
 		},

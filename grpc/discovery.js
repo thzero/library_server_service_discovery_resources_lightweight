@@ -1,29 +1,31 @@
 import DiscoveryService from '@thzero/library_server/service/discovery';
 
+import LightweightResourceDiscoveryGrpcService from './index';
+
 class GrpcLightweightResourceDiscoveryService extends DiscoveryService {
 	constructor() {
 		super();
+
+		this._grpcService = null;
+	}
+
+	async init(injector) {
+		await super.init(injector);
+
+		this._grpcService = new LightweightResourceDiscoveryGrpcService();
+		this._grpcService.init(injector);
 	}
 
 	async cleanup(correlationId) {
-		const response = this._success(correlationId);
-
-		this._logger.debug('GrpcLightweightResourceDiscoveryService', 'cleanup', 'response', response, correlationId);
-		return response;
+		return this._grpcService.cleanup(correlationId);
 	}
 
 	async getService(correlationId, name) {
-		const response = this._success(correlationId);
-
-		this._logger.debug('GrpcLightweightResourceDiscoveryService', 'getService', 'response', response, correlationId);
-		return response;
+		return this._grpcService.getService(correlationId);
 	}
 
 	async register(correlationId, config) {
-		const response = this._success(correlationId);
-
-		this._logger.debug('GrpcLightweightResourceDiscoveryService', 'register', 'response', response, correlationId);
-		return response;
+		return this._grpcService.register(correlationId, config);
 	}
 }
 

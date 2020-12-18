@@ -35,7 +35,7 @@ class LightweightResourceDiscoveryGrpcService extends BaseClientGrpcService {
 		}
 	}
 
-	async get(correlationId, token) {
+	async getService(correlationId, token) {
 		try {
 			this._initClient(correlationId);
 
