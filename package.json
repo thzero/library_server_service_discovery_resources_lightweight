@@ -25,8 +25,8 @@
   "dependencies": {
     "@thzero/library_common": "^0.12.0",
     "@thzero/library_server": "^0.12.5",
-    "@thzero/library_server_service_discovery_resources_lightweight_proto": "^0.12.5",
-    "@thzero/library_server_service_rest_axios": "^0.12.3"
+    "@thzero/library_server_service_discovery_resources_lightweight_proto": "^0.12.6",
+    "@thzero/library_server_service_rest_axios": "^0.12.4"
   },
   "devDependencies": {
     "@thzero/library_cli": "^0.12.0"
