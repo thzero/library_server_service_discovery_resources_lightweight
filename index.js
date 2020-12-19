@@ -100,7 +100,7 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 		if (!String.isNullOrEmpty(opts.name))
 			registerConfig.name = opts.name;
 		if (!String.isNullOrEmpty(opts.ttl))
-			egisterConfig.ttl = opts.ttl;
+			registerConfig.ttl = opts.ttl;
 		if (!String.isNullOrEmpty(opts.description))
 			registerConfig.notes = opts.description;
 		if (opts.grpc) {
