@@ -85,6 +85,10 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 
 		this._name = packageJson.name;
 		const config = this._config.get('discovery.resources', null);
+		this._logger.debug('LightweightResourceDiscoveryService', '_register', 'config', config, correlationId);
+		if (!config.register)
+			return this._success(correlationId);
+
 		if (config && !String.isNullOrEmpty(config.name))
 			this._name = config.name;
 
