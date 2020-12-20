@@ -18,15 +18,14 @@ class LightweightResourceDiscoveryGrpcService extends BaseClientGrpcService {
 
 	async deregister(correlationId, token) {
 		try {
-			this._initClient(correlationId);
+			await this._initClient(correlationId);
 
 			this._enforceNotNull('LightweightResourceDiscoveryGrpcService', 'deregister', token, 'token');
-			const request = new registryMessages.VerifyTokenRequest();
-			request.setCorrelationid(correlationId);
+			const request = new registryMessages.DeregisterRequest();
 			request.setToken(token);
 
-			const dergisterResponse = await this._execute(correlationId, this._client.deregister, this._client, request);
-			this._enforceNotNull('LightweightResourceDiscoveryGrpcService', 'deregister', dergisterResponse, 'verifyTokenResponse', correlationId);
+			const deregisterResponse = await this._execute(correlationId, this._client.deregister, this._client, request);
+			this._enforceNotNull('LightweightResourceDiscoveryGrpcService', 'deregister', deregisterResponse, 'deregisterResponse', correlationId);
 
 			return dergisterResponse;
 		}
@@ -37,15 +36,14 @@ class LightweightResourceDiscoveryGrpcService extends BaseClientGrpcService {
 
 	async getService(correlationId, token) {
 		try {
-			this._initClient(correlationId);
+			await this._initClient(correlationId);
 
 			this._enforceNotNull('LightweightResourceDiscoveryGrpcService', 'get', token, 'token');
-			const request = new registryMessages.VerifyTokenRequest();
-			request.setCorrelationid(correlationId);
+			const request = new registryMessages.GetRequest();
 			request.setToken(token);
 
 			const getResponse = await this._execute(correlationId, this._client.get, this._client, request);
-			this._enforceNotNull('LightweightResourceDiscoveryGrpcService', 'get', getResponse, 'verifyTokenResponse', correlationId);
+			this._enforceNotNull('LightweightResourceDiscoveryGrpcService', 'get', getResponse, 'getResponse', correlationId);
 
 			this._logger.debug('LightweightResourceDiscoveryGrpcService', 'get', 'getResponse', getResponse, correlationId);
 			const node = getResponse ? getResponse.toObject() : null;
@@ -57,17 +55,35 @@ class LightweightResourceDiscoveryGrpcService extends BaseClientGrpcService {
 		}
 	}
 
-	async register(correlationId, token) {
+	async register(correlationId, config) {
 		try {
-			this._initClient(correlationId);
+			await this._initClient(correlationId);
 
-			this._enforceNotNull('LightweightResourceDiscoveryGrpcService', 'register', token, 'token');
-			const request = new registryMessages.VerifyTokenRequest();
-			request.setCorrelationid(correlationId);
-			request.setToken(token);
+			this._enforceNotNull('LightweightResourceDiscoveryGrpcService', 'register', config, 'config');
+			const request = new registryMessages.RegisterRequest();
+			request.setName(config.name);
+			request.setAddress(config.address);
+			request.setPort(config.port);
+			request.setHealthcheck(config.healthCheck);
+			request.setSecure(config.secure);
+
+			if (config.dns) {
+				const requestDns = new registryMessages.DnsRegisterRequest();
+				requestDns.setLabel(config.dns.label);
+				requestDns.setNamespace(config.dns.namespace);
+				requestDns.setLocal(config.dns.local);
+				request.setDns(requestDns);
+			}
+
+			if (config.grpc) {
+				const requestGrpc = new registryMessages.GrpcRegisterRequest();
+				requestGrpc.setPort(config.grpc.port);
+				requestGrpc.setSecure(config.grpc.secure);
+				request.setGrpc(requestGrpc);
+			}
 
 			const registerResponse = await this._execute(correlationId, this._client.register, this._client, request);
-			this._enforceNotNull('LightweightResourceDiscoveryGrpcService', 'register', registerResponse, 'verifyTokenResponse', correlationId);
+			this._enforceNotNull('LightweightResourceDiscoveryGrpcService', 'register', registerResponse, 'registerResponse', correlationId);
 
 			return registerResponse;
 		}
@@ -77,19 +93,19 @@ class LightweightResourceDiscoveryGrpcService extends BaseClientGrpcService {
 	}
 
 	async _initClient(correlationId) {
-		if (!this._client)
+		if (this._client)
 			return;
 
 		const release = await this._mutex.acquire();
 		try {
-			if (!this._client)
+			if (this._client)
 				return;
 
 			const url = await this._host(LibraryUtility.generateId(), 'registry_grpc');
 			if (String.isNullOrEmpty(url))
 				throw Error(`Invalid url for 'registry_grpc'.`);
 
-			this._client = new registryServices.RegisterClient(url, this._credentials);
+			this._client = new registryServices.RegistryClient(url, this._credentials);
 		}
 		finally {
 			release();
