@@ -101,11 +101,11 @@ class LightweightResourceDiscoveryGrpcService extends BaseClientGrpcService {
 			if (this._client)
 				return;
 
-			const url = await this._host(LibraryUtility.generateId(), 'registry_grpc');
-			if (String.isNullOrEmpty(url))
-				throw Error(`Invalid url for 'registry_grpc'.`);
+			const host = await this._host(LibraryUtility.generateId(), 'registry_grpc');
+			if (!host || String.isNullOrEmpty(host.url))
+				throw Error(`Invalid host for 'registry_grpc'.`);
 
-			this._client = new registryServices.RegistryClient(url, this._credentials);
+			this._client = new registryServices.RegistryClient(host.url, this._credentials(host));
 		}
 		finally {
 			release();
