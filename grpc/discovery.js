@@ -21,7 +21,7 @@ class GrpcLightweightResourceDiscoveryService extends DiscoveryService {
 	}
 
 	async getService(correlationId, name) {
-		return this._grpcService.getService(correlationId);
+		return this._grpcService.getService(correlationId, name);
 	}
 
 	async register(correlationId, config) {
