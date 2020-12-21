@@ -1,9 +1,9 @@
 {
   "name": "@thzero/library_server_service_discovery_resources_lightweight",
-  "version": "0.12.20",
+  "version": "0.12.21",
   "version_major": 0,
   "version_minor": 12,
-  "version_patch": 20,
+  "version_patch": 21,
   "version_date": "12/21/2020",
   "license": "MIT",
   "description": "",
