@@ -87,6 +87,7 @@ class LightweightResourceDiscoveryGrpcService extends BaseClientGrpcService {
 				requestHealthCheck.setEnabled(config.healthCheck.enabled  !== undefined && config.healthCheck.enabled !== null ? config.healthCheck.enabled : true);
 				requestHealthCheck.setHealtcheck(config.healthCheck.healthCheck);
 				requestHealthCheck.setInterval(config.healthCheck.interval);
+				requestHealthCheck.setType(config.healthCheck.type);
 				request.setHealtcheck(requestHealthCheck);
 			}
 
