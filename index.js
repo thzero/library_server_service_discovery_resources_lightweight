@@ -34,6 +34,27 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 		this._communicationTypes.set(this._communicationTypeHttp, service);
 	}
 
+	async initialize(correlationId, opts) {
+		try {
+			this._enforceNotEmpty('LightweightResourceDiscoveryService', 'initialize', opts, 'opts', correlationId);
+
+			const heartbeatRequired = this._config.get('discovery.heartbeatRequired', false);
+			if (!(this.allowsHeartbeat && heartbeatRequired))
+				return this._success(correlationId);
+
+			await this.register(Utility.generateId(), optsI);
+			const heartbeatInterval = Number(this._config.get('discovery.heartbeatInterval', 30));
+			setInterval((async function () {
+				await this.register(Utility.generateId(), optsI);
+			}).bind(this), heartbeatInterval * 1000);
+
+			return this._success(correlationId);
+		}
+		catch(err) {
+			return this._error('LightweightResourceDiscoveryService', 'initialize', null, err, null, null, correlationId);
+		}
+	}
+
 	async _cleanup(correlationId) {
 		if (String.isNullOrEmpty(this._name))
 			return;
