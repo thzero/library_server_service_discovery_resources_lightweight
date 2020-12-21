@@ -64,7 +64,6 @@ class LightweightResourceDiscoveryGrpcService extends BaseClientGrpcService {
 			request.setName(config.name);
 			request.setAddress(config.address);
 			request.setPort(config.port);
-			request.setHealthcheck(config.healthCheck);
 			request.setSecure(config.secure);
 
 			if (config.dns) {
@@ -77,9 +76,19 @@ class LightweightResourceDiscoveryGrpcService extends BaseClientGrpcService {
 
 			if (config.grpc) {
 				const requestGrpc = new registryMessages.GrpcRegisterRequest();
+				requestGrpc.setEnabled(config.grpc.enabled  !== undefined && config.grpc.enabled !== null ? config.grpc.enabled : true);
 				requestGrpc.setPort(config.grpc.port);
 				requestGrpc.setSecure(config.grpc.secure);
 				request.setGrpc(requestGrpc);
+			}
+
+			if (config.healthCheck) {
+				const requestHealthCheck = new registryMessages.HealthcheckRegisterRequest();
+				requestHealthCheck.setEnabled(config.healthCheck.enabled  !== undefined && config.healthCheck.enabled !== null ? config.healthCheck.enabled : true);
+				requestHealthCheck.setHealtcheck(config.healthCheck.healthCheck);
+				requestHealthCheck.setInterval(config.healthCheck.interval);
+				requestHealthCheck.setType(config.healthCheck.type);
+				request.setHealtcheck(requestHealthCheck);
 			}
 
 			const registerResponse = await this._execute(correlationId, this._client.register, this._client, request);

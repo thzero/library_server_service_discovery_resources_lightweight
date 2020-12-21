@@ -107,12 +107,8 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 			registerConfig.ttl = opts.ttl;
 		if (!String.isNullOrEmpty(opts.description))
 			registerConfig.notes = opts.description;
-		if (opts.grpc) {
-			registerConfig.grpc = {
-				port: opts.grpc.port,
-				secure: opts.grpc.secure
-			}
-		}
+		if (opts.grpc)
+			registerConfig.grpc = opts.grpc;
 
 		const communicationTypeService = this._communicationTypes.get(this._communicationType);
 		if (!communicationTypeService)
