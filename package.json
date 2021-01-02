@@ -1,10 +1,10 @@
 {
   "name": "@thzero/library_server_service_discovery_resources_lightweight",
-  "version": "0.12.22",
+  "version": "0.12.24",
   "version_major": 0,
   "version_minor": 12,
-  "version_patch": 22,
-  "version_date": "12/24/2020",
+  "version_patch": 24,
+  "version_date": "01/01/2021",
   "license": "MIT",
   "description": "",
   "author": "thZero",
@@ -24,10 +24,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@thzero/library_common": "^0.12.0",
-    "@thzero/library_server": "^0.12.11",
-    "@thzero/library_server_service_discovery_resources_lightweight_proto": "^0.12.14",
-    "@thzero/library_server_service_grpc": "^0.12.13"
+    "@thzero/library_common": "^0.12.4",
+    "@thzero/library_server": "^0.12.15",
+    "@thzero/library_server_service_discovery_resources_lightweight_proto": "^0.12.16",
+    "@thzero/library_server_service_grpc": "^0.12.14"
   },
   "devDependencies": {
     "@thzero/library_cli": "^0.12.0"
