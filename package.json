@@ -36,7 +36,7 @@
     "@thzero/library_common_service": "^0.15",
     "@thzero/library_server": "^0.15",
     "@thzero/library_server_service_grpc": "^0.15",
-    "@grpc/grpc-js": "^1.4.4",
+    "@grpc/grpc-js": "^1.4.5",
     "google-protobuf": "^3.19.1"
   }
 }
