@@ -28,15 +28,12 @@
   "dependencies": {
     "@thzero/library_server_service_discovery_resources_lightweight_proto": "^0.15"
   },
-  "devDependencies": {
-    "@thzero/library_cli": "^0.15"
-  },
   "peerDependencies": {
+    "@grpc/grpc-js": "^1.4.5",
     "@thzero/library_common": "^0.15",
     "@thzero/library_common_service": "^0.15",
     "@thzero/library_server": "^0.15",
     "@thzero/library_server_service_grpc": "^0.15",
-    "@grpc/grpc-js": "^1.4.5",
     "google-protobuf": "^3.19.1"
   }
 }
