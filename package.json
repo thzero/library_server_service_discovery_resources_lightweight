@@ -26,8 +26,8 @@
   },
   "dependencies": {
     "@thzero/library_server_service_discovery_resources_lightweight_proto": "^0.15",
-    "@grpc/grpc-js": "^1.4.5",
-    "google-protobuf": "^3.19.1"
+    "@grpc/grpc-js": "^1.6.6",
+    "google-protobuf": "^3.20.0"
   },
   "peerDependencies": {
     "@thzero/library_common": "^0.15",
