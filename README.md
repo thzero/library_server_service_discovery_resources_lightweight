@@ -4,7 +4,13 @@
 
 # library_server_service_discovery_resources_lightweight
 
-### Installation
+## Requirements
+
+### NodeJs
+
+[NodeJs](https://nodejs.org) version 18+
+
+## Installation
 
 [![NPM](https://nodei.co/npm/@thzero/library_server_service_discovery_resources_lightweight.png?compact=true)](https://npmjs.org/package/@thzero/library_server_service_discovery_resources_lightweight)
 
