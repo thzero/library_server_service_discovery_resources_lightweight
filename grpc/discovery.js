@@ -1,6 +1,6 @@
 import DiscoveryService from '@thzero/library_server/service/discovery/index.js';
 
-import LightweightResourceDiscoveryGrpcService from './index.js;
+import LightweightResourceDiscoveryGrpcService from './index.js';
 
 class GrpcLightweightResourceDiscoveryService extends DiscoveryService {
 	constructor() {
