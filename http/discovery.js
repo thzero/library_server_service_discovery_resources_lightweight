@@ -1,7 +1,7 @@
-import Constants from '../constants';
-import LibraryConstants from '@thzero/library_server/constants';
+import Constants from '../constants.js';
+import LibraryConstants from '@thzero/library_server/constants.js';
 
-import DiscoveryService from '@thzero/library_server/service/discovery';
+import DiscoveryService from '@thzero/library_server/service/discovery/index.js';
 
 class HttpLightweightResourceDiscoveryService extends DiscoveryService {
 	constructor() {
