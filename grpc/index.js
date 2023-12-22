@@ -1,8 +1,8 @@
 import { Mutex as asyncMutex } from 'async-mutex';
 
-import LibraryUtility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility/index';
 
-import BaseClientGrpcService from '@thzero/library_server_service_grpc/client';
+import BaseClientGrpcService from '@thzero/library_server_service_grpc/client.js';
 
 import registryMessages from '@thzero/library_server_service_discovery_resources_lightweight_proto/binary/registry_pb.cjs';
 import registryServices from '@thzero/library_server_service_discovery_resources_lightweight_proto/binary/registry_grpc_pb.cjs';

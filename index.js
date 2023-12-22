@@ -1,11 +1,11 @@
 import { Mutex as asyncMutex } from 'async-mutex';
 
-import NotImplementedError from '@thzero/library_common/errors/notImplemented';
+import NotImplementedError from '@thzero/library_common/errors/notImplemented.js';
 
-import ResourceDiscoveryService from '@thzero/library_server/service/discovery/resources';
+import ResourceDiscoveryService from '@thzero/library_server/service/discovery/resources/index.js';
 
-import GrpcLightweightResourceDiscoveryService from './grpc/discovery';
-import HttpLightweightResourceDiscoveryService from './http/discovery';
+import GrpcLightweightResourceDiscoveryService from './grpc/discovery.js';
+import HttpLightweightResourceDiscoveryService from './http/discovery.js';
 
 class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 	constructor() {
