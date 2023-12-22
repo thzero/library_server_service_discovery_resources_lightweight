@@ -1,6 +1,6 @@
 import { Mutex as asyncMutex } from 'async-mutex';
 
-import LibraryUtility from '@thzero/library_common/utility/index';
+import LibraryUtility from '@thzero/library_common/utility/index.js';
 
 import BaseClientGrpcService from '@thzero/library_server_service_grpc/client.js';
 
