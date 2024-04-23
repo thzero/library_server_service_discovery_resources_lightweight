@@ -1,5 +1,7 @@
 import { Mutex as asyncMutex } from 'async-mutex';
 
+import LibraryCommonUtility from '@thzero/library_common/utility/index.js';
+
 import NotImplementedError from '@thzero/library_common/errors/notImplemented.js';
 
 import ResourceDiscoveryService from '@thzero/library_server/service/discovery/resources/index.js';
@@ -34,24 +36,24 @@ class LightweightResourceDiscoveryService extends ResourceDiscoveryService {
 		this._communicationTypes.set(this._communicationTypeHttp, service);
 	}
 
-	async initialize(correlationId, opts) {
+	async initializeDiscovery(opts) {
 		try {
-			this._enforceNotEmpty('LightweightResourceDiscoveryService', 'initialize', opts, 'opts', correlationId);
+			this._enforceNotEmpty('LightweightResourceDiscoveryService', 'initializeDiscovery', opts, 'opts', null);
 
 			const heartbeatRequired = this._config.get('discovery.heartbeatRequired', false);
 			if (!(this.allowsHeartbeat && heartbeatRequired))
-				return this._success(correlationId);
+				return this._success(null);
 
-			await this.register(Utility.generateId(), optsI);
+			await this.register(LibraryCommonUtility.generateId(), optsI);
 			const heartbeatInterval = Number(this._config.get('discovery.heartbeatInterval', 30));
 			setInterval((async function () {
-				await this.register(Utility.generateId(), optsI);
+				await this.register(LibraryCommonUtility.generateId(), optsI);
 			}).bind(this), heartbeatInterval * 1000);
 
-			return this._success(correlationId);
+			return this._success(null);
 		}
 		catch(err) {
-			return this._error('LightweightResourceDiscoveryService', 'initialize', null, err, null, null, correlationId);
+			return this._error('LightweightResourceDiscoveryService', 'initializeDiscovery', null, err, null, null, null);
 		}
 	}
 
