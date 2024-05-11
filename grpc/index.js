@@ -1,6 +1,6 @@
 import { Mutex as asyncMutex } from 'async-mutex';
 
-import LibraryUtility from '@thzero/library_common/utility/index.js';
+import LibraryCommonUtility from '@thzero/library_common/utility/index.js';
 
 import BaseClientGrpcService from '@thzero/library_server_service_grpc/client.js';
 
@@ -110,7 +110,7 @@ class LightweightResourceDiscoveryGrpcService extends BaseClientGrpcService {
 			if (this._client)
 				return;
 
-			const host = await this._host(LibraryUtility.generateId(), 'registry_grpc');
+			const host = await this._host(LibraryCommonUtility.generateId(), 'registry_grpc');
 			if (!host || String.isNullOrEmpty(host.url))
 				throw Error(`Invalid host for 'registry_grpc'.`);
 
