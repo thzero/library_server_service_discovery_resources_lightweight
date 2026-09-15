@@ -1,11 +1,11 @@
 {
   "name": "@thzero/library_server_service_discovery_resources_lightweight",
   "type": "module",
-  "version": "0.18.18",
+  "version": "0.19.1",
   "version_major": 0,
-  "version_minor": 18,
-  "version_patch": 18,
-  "version_date": "02/07/2026",
+  "version_minor": 19,
+  "version_patch": 1,
+  "version_date": "09/15/2026",
   "license": "MIT",
   "description": "",
   "author": "thZero",
@@ -27,14 +27,14 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@thzero/library_server_service_discovery_resources_lightweight_proto": "^0.18",
+    "@thzero/library_server_service_discovery_resources_lightweight_proto": "^0.19",
     "@grpc/grpc-js": "^1.13.4",
     "google-protobuf": "^3.21.4"
   },
   "peerDependencies": {
-    "@thzero/library_common": "^0.18",
-    "@thzero/library_common_service": "^0.18",
-    "@thzero/library_server": "^0.18",
-    "@thzero/library_server_service_grpc": "^0.18"
+    "@thzero/library_common": "^0.19",
+    "@thzero/library_common_service": "^0.19",
+    "@thzero/library_server": "^0.19",
+    "@thzero/library_server_service_grpc": "^0.19"
   }
 }
